@@ -1,4 +1,4 @@
-## About Webscraping Pascoa 
+## About Easterscraping
 
 If you are a fan of Stuttgart's chocolates, this script will suit you well. By the simple action of executing the file, you are able to send to yourself (or anyone that you have the email adress) a report of all the available chocolates and their respective price in the bomboniere section of Stuttgart's website. Project made with Python as the main programming language and MySQL as the database to store the information.
 
