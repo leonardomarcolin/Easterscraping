@@ -38,6 +38,8 @@ resposta.raise_for_status()
 stut_site = BeautifulSoup(resposta.text, features='html.parser')
 
 ol_principal = stut_site.find('ol', class_='filterproducts products list items product-items')
+if ol_principal is None:
+    raise SystemExit("Não foi possível encontrar a lista de produtos. O layout do site pode ter mudado.")
 
 produtos = []
 for item in ol_principal.find_all('li'):
@@ -55,7 +57,8 @@ for item in ol_principal.find_all('li'):
 
     produtos.append((nome_tag.text.strip(), preco))
 
-
+if not produtos:
+    raise SystemExit("Nenhum produto encontrado!")
 
 query = '''
 INSERT INTO CHOCOLATES(NOME_PRODUTO, PRECO, DATA_COLETA) VALUES
