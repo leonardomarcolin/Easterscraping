@@ -1,23 +1,48 @@
-## About Easterscraping
+# Easterscraping
 
-If you are a fan of Stuttgart's chocolates, this script will suit you well. By the simple action of executing the file, you are able to send to yourself (or anyone that you have the email adress) a report of all the available chocolates and their respective price in the bomboniere section of Stuttgart's website. Project made with Python as the main programming language and MySQL as the database to store the information.
+## Sobre o projeto
 
-## REQUIREMENTS
-In order for the script to run properly, you will need the following software to be installed:
+Se você é fã dos chocolates da Stuttgart, este script é para você. Basta executar o arquivo para enviar a si mesmo (ou a qualquer pessoa cujo e-mail você tenha) um relatório com todos os chocolates disponíveis e seus respectivos preços na seção de bomboniere do site da Stuttgart.
+
+O projeto foi feito em **Python** como linguagem principal e **MySQL** como banco de dados para armazenar as informações.
+
+## Requisitos
+
+Para que o script funcione corretamente, você precisará ter instalado:
+
 - MySQL 8.0
 - Python 3.13
-- A code editor (I personally recommend VSCode) that supports Python language 
-- An email to send the reports that has a app password
-- An email to receive the reports
+- Um editor de código que suporte Python (eu recomendo o VSCode)
+- Um e-mail para enviar os relatórios, com **senha de app** configurada
+- Um e-mail para receber os relatórios
 
-After downloading the python file and requirements.txt, open the .py with your favorite code editor and change the email on the bottom of the code, alongside with the app password
-Before running, you need to open the terminal for your project and run the following command:
-pip install -r requirements.txt
- 
-**
-The project originally comes with a example email for both sending and receiving as well as a exemple app password
-**
+## Como usar
 
-If you want to make an executable file for the script, the following steps are needed:
-In the terminal, do "pyinstaller --onefile --noconsole main.py"
-you will notice that new folders will be created on the directory of the script. Open the "dist" folder and then "main", inside it you will be able to find the script as an .exe that will run and send the email every time you open it
+1. Baixe o arquivo `.py` e o `requirements.txt`.
+2. Abra o `.py` no seu editor de código e altere, no final do código, o e-mail de envio, a senha de app e o e-mail de destino.
+3. Confira as credenciais do MySQL no início do código (por padrão: host `localhost`, usuário `root` e senha `root`) e ajuste conforme a sua instalação.
+4. Abra o terminal na pasta do projeto e instale as dependências:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Execute o script:
+
+   ```bash
+   python main.py
+   ```
+
+> **Observação:** o projeto vem originalmente com um e-mail de exemplo (tanto para envio quanto para recebimento) e uma senha de app de exemplo. Troque por seus dados antes de executar.
+
+> **Atenção:** a cada execução, o script apaga e recria o banco de dados `CHOCOLATERIA`. Não utilize esse nome se você já tiver um banco com ele no seu MySQL.
+
+## Gerando um executável (opcional)
+
+Se quiser transformar o script em um arquivo executável, rode no terminal:
+
+```bash
+pyinstaller --onefile --noconsole main.py
+```
+
+Serão criadas novas pastas no diretório do script. Abra a pasta `dist` e, dentro dela, você encontrará o script como um arquivo `.exe`, que enviará o e-mail toda vez que for aberto.
