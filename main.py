@@ -40,17 +40,23 @@ stut_site = BeautifulSoup(resposta.text, features='html.parser')
 
 ol_principal = stut_site.find('ol', class_='filterproducts products list items product-items')
 
-nome_choc_tudo = ol_principal.find_all('strong', class_ = 'product name product-item-name')
-nome_tabela_choc = [nome.text.strip() for nome in nome_choc_tudo]
+produtos = []
+for item in ol_principal.find_all('li'):
+    nome_tag = item.find('strong', class_ = 'product name product-item-name')
+    preco_tag = item.find('div', class_ = 'price-box price-final_price')
+    if not nome_tag or not preco_tag:
+        continue
+    texto_preco = preco_tag.text.strip()
+    if not texto_preco:
+        continue
+
+    preco = float(
+        texto_preco.replace('R$','').replace('.','').replace(',','').strip()
+    )
+
+    produtos.append((nome_tag.text.strip(), texto_preco))
 
 
-preco_choc_tudo = ol_principal.find_all('div', class_ = 'price-box price-final_price')
-preco_naoconvertido_choc = [preco.text.strip() for preco in preco_choc_tudo]
-preco_tabela_choc = [
-    float(preco_antes.replace('R$', '').replace(',', '.').strip())
-    for preco_antes in preco_naoconvertido_choc
-    if preco_antes.strip() != ''
-]
 
 query = '''
 SELECT COUNT(*) FROM CHOCOLATES
@@ -64,8 +70,8 @@ for nome,preco in zip(nome_tabela_choc,preco_tabela_choc):
     query = '''
     INSERT INTO CHOCOLATES(NOME_PRODUTO, PRECO, DATA_COLETA) VALUES
     (%s,%s,%s)'''
-    valores = (nome,preco,hora_atual)
-    cursor.execute(query,valores)
+    valores = [(nome,preco,hora_atual) for nome, preco in produtos]
+    cursor.executemany(query, valores)
 
 conexao.commit()
 
