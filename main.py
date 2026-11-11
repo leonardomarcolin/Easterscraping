@@ -1,14 +1,21 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import pymysql as pmq
 from datetime import datetime
 import yagmail
+from dotenv import load_dotenv
 
+load_dotenv()
+senha_db = os.getenv('senha_db')
+email_remetente = os.getenv('email_remetente')
+email_destinatario = os.getenv('email_destinatario')
+email_senha_app = os.getenv('email_senha_app')
 
 conexao = pmq.connect(
     host = 'localhost',
     user = 'root',
-    password = 'root'
+    password = senha_db
 )
 
 cursor = conexao.cursor()
@@ -81,9 +88,9 @@ for nome,preco in resultados:
 
 html = f'''{corpo_html}</tbody></table><p>⌚ Coleta realizada em: {hora_email}</p><p>Veja mais em: https://www.stuttgart.com.br/bomboniere/barras-de-chocolate.html</p>'''
 
-yag = yagmail.SMTP('teste@gmail.com', 'abcd efgh ijkl mnop')
+yag = yagmail.SMTP(email_remetente, email_senha_app)
 
 try:
-    yag.send(to='teste@gmail.com', subject='🐰Ofertas de Páscoa - Chocolates Stuttgart', contents=html)
+    yag.send(to=email_destinatario, subject='🐰Ofertas de Páscoa - Chocolates Stuttgart', contents=html)
 except Exception as erro:
     print(f'Erro ao enviar o email: {erro}')
