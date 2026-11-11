@@ -32,9 +32,8 @@ hora_email = datetime.now().strftime('%d/%m/%Y %H:%M')
 
 stut = 'https://www.stuttgart.com.br/bomboniere/barras-de-chocolate.html'
 
-resposta = requests.get(stut)
-if resposta.status_code != 200:
-    raise SystemExit('Erro ao requisitar informações do site.')
+resposta = requests.get(stut, timeout=10, headers={'User-Agent': 'Mozilla/5.0'})
+resposta.raise_for_status()
 
 stut_site = BeautifulSoup(resposta.text, features='html.parser')
 
@@ -51,27 +50,18 @@ for item in ol_principal.find_all('li'):
         continue
 
     preco = float(
-        texto_preco.replace('R$','').replace('.','').replace(',','').strip()
+        texto_preco.replace('R$','').replace('.','').replace(',','.').strip()
     )
 
-    produtos.append((nome_tag.text.strip(), texto_preco))
+    produtos.append((nome_tag.text.strip(), preco))
 
 
 
 query = '''
-SELECT COUNT(*) FROM CHOCOLATES
-'''
-cursor.execute(query)
-tem_dados = cursor.fetchone()
-if tem_dados[0] > 0:
-    query = '''DELETE FROM CHOCOLATES'''
-    cursor.execute(query)
-for nome,preco in zip(nome_tabela_choc,preco_tabela_choc):
-    query = '''
-    INSERT INTO CHOCOLATES(NOME_PRODUTO, PRECO, DATA_COLETA) VALUES
-    (%s,%s,%s)'''
-    valores = [(nome,preco,hora_atual) for nome, preco in produtos]
-    cursor.executemany(query, valores)
+INSERT INTO CHOCOLATES(NOME_PRODUTO, PRECO, DATA_COLETA) VALUES
+(%s,%s,%s)'''
+valores = [(nome,preco,hora_atual) for nome, preco in produtos]
+cursor.executemany(query, valores)
 
 conexao.commit()
 
